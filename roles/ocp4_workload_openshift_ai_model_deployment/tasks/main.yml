@@ -38,12 +38,12 @@
   - llama-32-3b-instruct-http-route.yaml.j2
 
 - name: Save user data
-  agnosticd.core.agnosticd_user_info:
+  agnosticd_user_info:
     data:
       llama_32_3b_instruct_endpoint: "https://inference-gateway.{{ _ocp4_workload_openshift_ai_model_deployment_ingress_domain }}/llama-32-3b-instruct"
 
 - name: Print Admin credentials
-  agnosticd.core.agnosticd_user_info:
+  agnosticd_user_info:
     msg: "{{ item }}"
   loop:
   - "Llama inference endpoint: https://inference-gateway.{{ _ocp4_workload_openshift_ai_model_deployment_ingress_domain }}/llama-32-3b-instruct"
