@@ -17,13 +17,7 @@ spec:
           name: llama-32-3b-instruct-predictor
           port: 80
           weight: 1
-      filters:
-        - type: URLRewrite
-          urlRewrite:
-            path:
-              replacePrefixMatch: /
-              type: ReplacePrefixMatch
       matches:
-        - path:
-            type: PathPrefix
-            value: /llama-32-3b-instruct
+        - headers:
+            - name: X-Model
+              value: llama-32-3b-instruct
