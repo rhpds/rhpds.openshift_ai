@@ -10,4 +10,3 @@
     template: gpu-hardware-profile.yaml.j2
   loop:
   - gpu-hardware-profile.yaml.j2
-  - rhods-dashboard-route.yaml
