@@ -55,7 +55,6 @@
 
       curl https://inference-gateway.{{ _ocp4_workload_openshift_ai_model_deployment_ingress_domain }}/llama-32-3b-instruct/v1/completions \
         -H "Content-Type: application/json" \
-        -H "Authorization: Bearer YOUR_API_KEY" \
         -H "X-Model: llama-32-3b-instruct" \
         -d '{
           "model": "llama-32-3b-instruct",
