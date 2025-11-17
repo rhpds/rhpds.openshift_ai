@@ -19,6 +19,7 @@
 - name: Create metal lb instance
   kubernetes.core.k8s:
     state: present
+    namespace: "{{ ocp4_workload_metal_lb_namespace }}"
     template: metal-lb-instance.yml.j2
 
 - name: Retrieve node info
@@ -44,6 +45,7 @@
 - name: Create ip address pool
   kubernetes.core.k8s:
     state: present
+    namespace: "{{ ocp4_workload_metal_lb_namespace }}"
     template: "{{ item }}"
   loop:
   - ip-address-pool.yml.j2
