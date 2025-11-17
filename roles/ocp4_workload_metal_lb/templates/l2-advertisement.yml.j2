@@ -5,7 +5,3 @@ metadata:
 spec:
   ipAddressPools:
     - default-address-pool
-{% if ocp4_workload_metal_lb_match_labels is defined %}
-  serviceSelector:
-    matchLabels: {{ ocp4_workload_metal_lb_match_labels }}
-{% endif %}
