@@ -7,3 +7,5 @@ ocp4_workload_metal_lb_catalogsource_setup: false
 ocp4_workload_metal_lb_catalogsource_name: metallb-system-catalogsource
 ocp4_workload_metal_lb_catalog_snapshot_image: quay.io/gpte-devops-automation/olm_snapshot_redhat_catalog
 ocp4_workload_metal_lb_catalog_snapshot_image_tag: v4.20_2025_11_04
+ocp4_workload_metal_lb_ip_range_start: 200
+ocp4_workload_metal_lb_ip_range_end: 210
