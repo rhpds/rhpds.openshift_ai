@@ -4,7 +4,7 @@
     name: install_operator
   vars:
     install_operator_action: install
-    install_operator_name: rhods-operator
+    install_operator_name: metallb-operator
     install_operator_namespace: "{{ ocp4_workload_metal_lb_namespace }}"
     install_operator_channel: "{{ ocp4_workload_metal_lb_channel }}"
     install_operator_catalog: redhat-operators
@@ -19,7 +19,7 @@
 - name: Create metal lb instance
   kubernetes.core.k8s:
     state: present
-    template: metallb.yaml.j2
+    template: metal-lb-instance.yml.j2
 
 - name: Retrieve node info
   k8s_info:
