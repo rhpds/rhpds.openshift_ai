@@ -9,5 +9,5 @@ ocp4_workload_metal_lb_catalog_snapshot_image: quay.io/gpte-devops-automation/ol
 ocp4_workload_metal_lb_catalog_snapshot_image_tag: v4.20_2025_11_04
 ocp4_workload_metal_lb_ip_range_start: 200
 ocp4_workload_metal_lb_ip_range_end: 210
-ocp4_workload_metal_lb_match_labels:
-  gateway.networking.k8s.io/gateway-name: data-science-gateway
+# ocp4_workload_metal_lb_match_labels:
+#   gateway.networking.k8s.io/gateway-name: data-science-gateway
