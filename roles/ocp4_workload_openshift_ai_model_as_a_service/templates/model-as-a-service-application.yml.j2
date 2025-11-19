@@ -19,10 +19,10 @@ spec:
         clusterDomain: {{ openshift_cluster_ingress_domain }}
         apiUsers:
 {% for user_group in ocp4_workload_openshift_ai_model_as_a_service_api_users %}
-  {% for i in range(1, user_group.count + 1) %}
+{% for i in range(1, user_group.count + 1) %}
         - username: {{ user_group.username_prefix }}{{ i }}
           tier: {{ user_group.tier }}
-  {% endfor %}
+{% endfor %}
 {% endfor %}
         llmInferenceServices:
         {{ ocp4_workload_openshift_ai_model_as_a_service_models | to_yaml | indent(8) }}
