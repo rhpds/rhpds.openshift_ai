@@ -1,11 +1,11 @@
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: maas-api
+  name: model-as-a-service
   namespace: openshift-gitops
 spec:
   destination:
-    namespace: model-as-a-service
+    namespace: maas-api
     server: 'https://kubernetes.default.svc'
   ignoreDifferences:
     - group: '*'
