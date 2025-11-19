@@ -19,9 +19,6 @@ spec:
         clusterDomain: {{ openshift_cluster_ingress_domain }}
         apiUsers:
         {{ ocp4_workload_openshift_ai_model_as_a_service_api_users | to_yaml | indent(8) }}
-        maasUser:
-          username: {{ ocp4_workload_openshift_ai_model_as_a_service_maas_username }}
-          apiKey: {{ _ocp4_workload_openshift_ai_model_as_a_service_maas_api_key }}
         llmInferenceServices:
         {{ ocp4_workload_openshift_ai_model_as_a_service_models | to_yaml | indent(8) }}
     repoURL: {{ ocp4_workload_openshift_ai_model_as_a_service_helm_repo }}
