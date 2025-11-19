@@ -1,5 +1,44 @@
 ---
-- name: Create amespace for hosting model
+- name: Generate random API Key
+  ansible.builtin.set_fact:
+    _ocp4_workload_openshift_ai_model_as_a_service_maas_api_key: "{{ lookup('password', '/dev/null chars=ascii_letters,digits length=30') }}"
+
+- name: Create model-as-a-service application
   kubernetes.core.k8s:
     state: present
     template: model-as-a-service-application.yml.j2
+
+- name: Wait for model to be synced and healthy
+  kubernetes.core.k8s_info:
+    api_version: argoproj.io/v1alpha1
+    kind: Application
+    name: model-as-a-service
+    namespace: openshift-gitops
+  register: r_argocd_app
+  until:
+    - r_argocd_app.resources | length > 0
+    - r_argocd_app.resources[0].status is defined
+    - r_argocd_app.resources[0].status.sync is defined
+    - r_argocd_app.resources[0].status.sync.status is defined
+    - r_argocd_app.resources[0].status.sync.status == "Synced"
+    - r_argocd_app.resources[0].status.health is defined
+    - r_argocd_app.resources[0].status.health.status is defined
+    - r_argocd_app.resources[0].status.health.status == "Healthy"
+  retries: 60
+  delay: 10
+  failed_when: false
+
+- name: Get all InferenceService resources
+  kubernetes.core.k8s_info:
+    api_version: serving.kserve.io/v1beta1
+    kind: LLMInferenceService
+  register: r_inference_services
+
+- name: Save user data
+  agnosticd.core.agnosticd_user_info:
+    msg: |
+      LLM Endpoint: http://maas.{{ openshift_cluster_ingress_domain }}/{{ item.metadata.namespace }}/{{ item.metadata.name }}
+      Model Name: {{ item.spec.model.name }}
+      API Key: {{ _ocp4_workload_openshift_ai_model_as_a_service_maas_api_key }}
+      {{ "\n" }}
+  loop: "{{ r_inference_services.resources }}"

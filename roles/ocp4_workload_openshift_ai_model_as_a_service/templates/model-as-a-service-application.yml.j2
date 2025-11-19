@@ -18,6 +18,10 @@ spec:
       parameters:
         - name: clusterDomain
           value: {{ openshift_cluster_ingress_domain }}
+        - name: maasUser.username
+          value: {{ ocp4_workload_openshift_ai_model_as_a_service_maas_username }}
+        - name: maasUser.apiKey
+          value: {{ _ocp4_workload_openshift_ai_model_as_a_service_maas_api_key }}
     repoURL: {{ ocp4_workload_openshift_ai_model_as_a_service_helm_repo }}
     targetRevision: {{ ocp4_workload_openshift_ai_model_as_a_service_helm_repo_target_revision }}
     path: ./
