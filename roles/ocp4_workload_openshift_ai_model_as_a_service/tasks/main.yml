@@ -1,0 +1,5 @@
+---
+- name: Create amespace for hosting model
+  kubernetes.core.k8s:
+    state: present
+    template: model-as-a-service-application.yml.j2

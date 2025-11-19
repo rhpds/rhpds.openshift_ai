@@ -1,0 +1,36 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: maas-api
+  namespace: openshift-gitops
+spec:
+  destination:
+    namespace: model-as-a-service
+    server: 'https://kubernetes.default.svc'
+  ignoreDifferences:
+    - group: '*'
+      jqPathExpressions:
+        - '.imagePullSecrets[] | select(.name | contains("-dockercfg-"))'
+      kind: ServiceAccount
+  project: default
+  source:
+    helm:
+      parameters:
+        - name: clusterDomain
+          value: {{ openshift_cluster_ingress_domain }}
+    repoURL: {{ ocp4_workload_openshift_ai_model_as_a_service_helm_repo }}
+    targetRevision: {{ ocp4_workload_openshift_ai_model_as_a_service_helm_repo_target_revision }}
+    path: ./
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    retry:
+      backoff:
+        duration: 5s
+        factor: 2
+        maxDuration: 2m
+      limit: -1
+    syncOptions:
+      - CreateNamespace=true
+      - ApplyOutOfSyncOnly=true
