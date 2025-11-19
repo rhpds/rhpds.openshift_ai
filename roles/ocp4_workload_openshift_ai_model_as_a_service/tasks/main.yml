@@ -40,6 +40,7 @@
       MODEL_URL=https://maas.{{ openshift_cluster_ingress_domain }}/{{ item.metadata.namespace }}/{{ item.metadata.name }}
       MODEL_NAME={{ item.spec.model.name }}
       API_KEY={{ _ocp4_workload_openshift_ai_model_as_a_service_maas_api_key }}
+      {{ "\n" }}
       curl -sSk \
       -H "API-KEY: ${API_KEY}" \
       -H "Content-Type: application/json" \
