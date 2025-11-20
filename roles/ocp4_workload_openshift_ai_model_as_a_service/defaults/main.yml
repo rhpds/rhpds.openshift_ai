@@ -10,45 +10,53 @@ ocp4_workload_openshift_ai_model_as_a_service_models:
 - apiVersion: serving.kserve.io/v1alpha1
   kind: LLMInferenceService
   metadata:
-    name: mistral-7b-instruct-v0.3
+    name: facebook-opt-125m
     namespace: llm
     annotations:
-      openshift.io/display-name: mistral-7b-instruct-v0.3
       alpha.maas.opendatahub.io/tiers: '[]'
-      argocd.argoproj.io/sync-wave: "2"
-    labels:
-      opendatahub.io/dashboard: 'true'
   spec:
     model:
-      name: mistral-7b-instruct-v0.3
-      uri: 'oci://quay.io/redhat-ai-services/modelcar-catalog:mistral-7b-instruct-v0.3'
+      uri: hf://facebook/opt-125m
+      name: facebook-opt-125m
     replicas: 1
     router:
       route: { }
-      # Connect to MaaS-enabled gateway
       gateway:
         refs:
           - name: maas-default-gateway
             namespace: openshift-ingress
     template:
-      # Ensure the pod is scheduled on GPU nodes
-      nodeSelector:
-        nvidia.com/gpu.present: "true"
-      tolerations:
-        - effect: NoSchedule
-          key: nvidia.com/gpu
-          operator: Exists
       containers:
-      - name: main
-        resources:
-          limits:
-            cpu: '2'
-            memory: 12Gi
-            nvidia.com/gpu: '1'
-          requests:
-            cpu: '500m'
-            memory: 8Gi
-            nvidia.com/gpu: '1'
+        - name: main
+          image: quay.io/pierdipi/vllm-cpu:latest
+          env:
+            - name: VLLM_LOGGING_LEVEL
+              value: INFO
+          resources:
+            limits:
+              cpu: '2'
+              memory: 10Gi
+            requests:
+              cpu: '100m'
+              memory: 8Gi
+          livenessProbe:
+            httpGet:
+              path: /health
+              port: 8000
+              scheme: HTTPS
+            initialDelaySeconds: 90
+            periodSeconds: 30
+            timeoutSeconds: 30
+            failureThreshold: 5
+          readinessProbe:
+            httpGet:
+              path: /health
+              port: 8000
+              scheme: HTTPS
+            initialDelaySeconds: 90
+            periodSeconds: 10
+            timeoutSeconds: 10
+            failureThreshold: 30
 - apiVersion: serving.kserve.io/v1alpha1
   kind: LLMInferenceService
   metadata:
