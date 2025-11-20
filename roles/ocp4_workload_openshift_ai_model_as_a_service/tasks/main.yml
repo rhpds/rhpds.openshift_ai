@@ -54,3 +54,17 @@
       TIER={{ item.metadata.annotations['user.authorino.kuadrant.io/groups'] }}
 
   loop: "{{ r_api_secrets.resources }}"
+
+- name: Print example curl data
+  agnosticd.core.agnosticd_user_info:
+    msg: |
+      curl -sSk \
+      -H "API-KEY: ${API_KEY}" \
+      -H "Content-Type: application/json" \
+      -d "{
+        \"model\": \"${MODEL_NAME}\",
+        \"chat_template\": \"{% for m in messages %}{{ m.role }}: {{ m.content }}\n{% endfor %}assistant:\",
+        \"messages\": [
+          { \"role\": \"user\", \"content\": \"Hello! Why is the sky blue?\" }
+        ]
+      }" "${MODEL_URL}/v1/chat/completions"
