@@ -40,20 +40,13 @@
 
 - name: Inference Service data
   agnosticd.core.agnosticd_user_info:
-    data:
-      "{{ item.spec.model.name }}":
-        model_url: "https://maas.{{ openshift_cluster_ingress_domain }}/{{ item.metadata.namespace }}/{{ item.metadata.name }}"
+    data: "{{ {item.spec.model.name: {'model_url': 'https://maas.' + openshift_cluster_ingress_domain + '/' + item.metadata.namespace + '/' + item.metadata.name}} }}"
   loop: "{{ r_inference_services.resources }}"
 
 - name: Generate API user data
   agnosticd.core.agnosticd_user_info:
-    data:
-      "{{ user.metadata.annotations['user.authorino.kuadrant.io/userid'] }}":
-        api_key: "{{ user.data.api_key | b64decode }}"
-        tier: "{{ user.metadata.annotations['user.authorino.kuadrant.io/groups'] }}"
+    data: "{{ {item.metadata.annotations['user.authorino.kuadrant.io/userid']: {'api_key': item.data.api_key | b64decode, 'tier': item.metadata.annotations['user.authorino.kuadrant.io/groups']}} }}"
   loop: "{{ r_api_secrets.resources }}"
-  loop_control:
-    loop_var: user
 
 - name: Print Inference Service data
   agnosticd.core.agnosticd_user_info:
