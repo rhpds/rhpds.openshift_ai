@@ -43,6 +43,13 @@
     data: "{{ {item.spec.model.name: {'model_url': 'https://maas.' + openshift_cluster_ingress_domain + '/' + item.metadata.namespace + '/' + item.metadata.name}} }}"
   loop: "{{ r_inference_services.resources }}"
 
+- name: Inference Service data
+  agnosticd.core.agnosticd_user_info:
+    data:
+      model_name_{{ loop.index }}: "{{ item.spec.model.name }}"
+      model_url_{{ loop.index }}: "https://maas.{{ openshift_cluster_ingress_domain }}/{{ item.metadata.namespace }}/{{ item.metadata.name }}"
+  loop: "{{ r_inference_services.resources }}"
+
 - name: Generate API user data
   agnosticd.core.agnosticd_user_info:
     data: "{{ {item.metadata.annotations['user.authorino.kuadrant.io/userid']: {'api_key': item.data.api_key | b64decode, 'tier': item.metadata.annotations['user.authorino.kuadrant.io/groups']}} }}"
