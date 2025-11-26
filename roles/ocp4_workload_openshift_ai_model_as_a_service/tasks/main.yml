@@ -38,23 +38,16 @@
       - authorino.kuadrant.io/managed-by=authorino
   register: r_api_secrets
 
+- name: Save user information for user access
+  include_tasks: setup_model_data.yml
+  loop: "{{ range(0, ocp4_workload_openshift_ai_model_as_a_service_maas_user_count | int) | list }}"
+  loop_control:
+    loop_var: n
+
 - name: Inference Service data
   agnosticd.core.agnosticd_user_info:
     data: "{{ {item.spec.model.name: {'model_url': 'https://maas.' + openshift_cluster_ingress_domain + '/' + item.metadata.namespace + '/' + item.metadata.name}} }}"
   loop: "{{ r_inference_services.resources }}"
-
-- name: Inference Service data
-  agnosticd.core.agnosticd_user_info:
-    data: >-
-      {{
-        {
-          'model_name_' ~ (idx | string): item.spec.model.name,
-          'model_url_' ~ (idx | string): 'https://maas.' ~ openshift_cluster_ingress_domain ~ '/' ~ item.metadata.namespace ~ '/' ~ item.metadata.name
-        }
-      }}
-  loop: "{{ r_inference_services.resources }}"
-  loop_control:
-    index_var: idx
 
 - name: Generate API user data
   agnosticd.core.agnosticd_user_info:
@@ -75,12 +68,3 @@
       API_KEY={{ item.data.api_key | b64decode }}
       TIER={{ item.metadata.annotations['user.authorino.kuadrant.io/groups'] }}
   loop: "{{ r_api_secrets.resources }}"
-
-- name: Print example curl data
-  agnosticd.core.agnosticd_user_info:
-    msg: |
-      curl -sSk \
-      -H "API-KEY: ${API_KEY}" \
-      -H "Content-Type: application/json" \
-      -d '{"model":"'${MODEL_NAME}'","messages":[{"role":"user","content":"Hello"}],"max_tokens":50}' \
-      "${MODEL_URL}/v1/chat/completions"

@@ -2,6 +2,7 @@
 ocp4_workload_openshift_ai_model_as_a_service_helm_repo: https://github.com/treddy08/model-as-a-service.git
 ocp4_workload_openshift_ai_model_as_a_service_helm_repo_target_revision: main
 ocp4_workload_openshift_ai_model_as_a_service_maas_username: maas-user
+ocp4_workload_openshift_ai_model_as_a_service_maas_user_count: 1
 ocp4_workload_openshift_ai_model_as_a_service_api_users:
 - count: 5
   username_prefix: api-user-
