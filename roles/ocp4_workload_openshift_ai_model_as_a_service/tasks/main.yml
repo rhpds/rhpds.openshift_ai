@@ -48,11 +48,13 @@
     data: >-
       {{
         {
-          'model_name_' ~ (loop.index | string): item.spec.model.name,
-          'model_url_' ~ (loop.index | string): 'https://maas.' ~ openshift_cluster_ingress_domain ~ '/' ~ item.metadata.namespace ~ '/' ~ item.metadata.name
+          'model_name_' ~ (idx | string): item.spec.model.name,
+          'model_url_' ~ (idx | string): 'https://maas.' ~ openshift_cluster_ingress_domain ~ '/' ~ item.metadata.namespace ~ '/' ~ item.metadata.name
         }
       }}
   loop: "{{ r_inference_services.resources }}"
+  loop_control:
+    index_var: idx
 
 - name: Generate API user data
   agnosticd.core.agnosticd_user_info:
