@@ -1,29 +1,37 @@
 ---
-- name: Generate model data
-  agnosticd.core.agnosticd_user_info:
-    user: "{{ n }}"
-    data: >-
+- name: Build model data dictionary
+  set_fact:
+    _ocp4_workload_openshift_ai_model_as_a_service_model_data: >-
       {{
-        {
-          'model_name_' ~ (idx | string): item.spec.model.name,
-          'model_url_' ~ (idx | string): 'https://maas.' ~ openshift_cluster_ingress_domain ~ '/' ~ item.metadata.namespace ~ '/' ~ item.metadata.name
-        }
+        _ocp4_workload_openshift_ai_model_as_a_service_model_data | default({}) | combine({
+          'model_name_' ~ ((idx + 1) | string): item.spec.model.name,
+          'model_url_' ~ ((idx + 1) | string): 'https://maas.' ~ openshift_cluster_ingress_domain ~ '/' ~ item.metadata.namespace ~ '/' ~ item.metadata.name
+        })
       }}
   loop: "{{ r_inference_services.resources }}"
   loop_control:
     index_var: idx
 
-- name: Generate API user data
+- name: Generate model data
   agnosticd.core.agnosticd_user_info:
-    user: "{{ n }}"
-    data: >-
+    user: "{{ ocp4_workload_openshift_ai_model_as_a_service_username_base }}{{ n }}"
+    data: "{{ _ocp4_workload_openshift_ai_model_as_a_service_model_data }}"
+
+- name: Build API user data dictionary
+  set_fact:
+    _ocp4_workload_openshift_ai_model_as_a_service_api_user_data: >-
       {{
-        {
-          'api_user_' ~ (idx | string): item.metadata.annotations['user.authorino.kuadrant.io/userid'],
-          'api_key_' ~ (idx | string): item.data.api_key | b64decode,
-          'api_tier_' ~ (idx | string): item.metadata.annotations['user.authorino.kuadrant.io/groups']
-        }
+        _ocp4_workload_openshift_ai_model_as_a_service_api_user_data | default({}) | combine({
+          'api_user_' ~ ((idx + 1) | string): item.metadata.annotations['user.authorino.kuadrant.io/userid'],
+          'api_key_' ~ ((idx + 1) | string): item.data.api_key | b64decode,
+          'api_tier_' ~ ((idx + 1) | string): item.metadata.annotations['user.authorino.kuadrant.io/groups']
+        })
       }}
   loop: "{{ r_api_secrets.resources }}"
   loop_control:
     index_var: idx
+
+- name: Generate API user data
+  agnosticd.core.agnosticd_user_info:
+    user: "{{ ocp4_workload_openshift_ai_model_as_a_service_username_base }}{{ n }}"
+    data: "{{ _ocp4_workload_openshift_ai_model_as_a_service_api_user_data }}"
