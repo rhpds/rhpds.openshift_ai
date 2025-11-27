@@ -20,21 +20,21 @@ spec:
         apiUsers:
 {% for user_group in ocp4_workload_openshift_ai_model_as_a_service_api_users.tierFreeUsers | default([]) %}
 {% for i in range(1, user_group.count + 1) %}
-        - username: {{ user_group.username_prefix }}{{ i if user_group.count > 1 else '' }}
+        - username: {{ user_group.usernamePrefix }}{{ i if user_group.count > 1 else '' }}
           apiKey: {{ lookup('password', '/dev/null length=20 chars=ascii_letters,digits') }}
           tier: tier-free-users
 {% endfor %}
 {% endfor %}
 {% for user_group in ocp4_workload_openshift_ai_model_as_a_service_api_users.tierPremiumUsers | default([]) %}
 {% for i in range(1, user_group.count + 1) %}
-        - username: {{ user_group.username_prefix }}{{ i if user_group.count > 1 else '' }}
+        - username: {{ user_group.usernamePrefix }}{{ i if user_group.count > 1 else '' }}
           apiKey: {{ lookup('password', '/dev/null length=20 chars=ascii_letters,digits') }}
           tier: tier-premium-users
 {% endfor %}
 {% endfor %}
 {% for user_group in ocp4_workload_openshift_ai_model_as_a_service_api_users.tierEnterpriseUsers | default([]) %}
 {% for i in range(1, user_group.count + 1) %}
-        - username: {{ user_group.username_prefix }}{{ i if user_group.count > 1 else '' }}
+        - username: {{ user_group.usernamePrefix }}{{ i if user_group.count > 1 else '' }}
           apiKey: {{ lookup('password', '/dev/null length=20 chars=ascii_letters,digits') }}
           tier: tier-enterprise-users
 {% endfor %}
