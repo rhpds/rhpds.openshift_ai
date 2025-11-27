@@ -53,7 +53,7 @@
 
 - name: Generate API user data
   agnosticd.core.agnosticd_user_info:
-    data: "{{ {item.metadata.annotations['user.authorino.kuadrant.io/userid']: {'api_key': item.data.api_key | b64decode, 'tier': item.metadata.annotations['user.authorino.kuadrant.io/groups']}} }}"
+    data: "api-{{ {item.metadata.annotations['user.authorino.kuadrant.io/userid']: {'api_key': item.data.api_key | b64decode, 'tier': item.metadata.annotations['user.authorino.kuadrant.io/groups']}} }}"
   loop: "{{ r_api_secrets.resources }}"
 
 - name: Print Inference Service data
