@@ -4,9 +4,17 @@ ocp4_workload_openshift_ai_model_as_a_service_helm_repo_target_revision: main
 ocp4_workload_openshift_ai_model_as_a_service_username_base: user
 ocp4_workload_openshift_ai_model_as_a_service_user_count: 1
 ocp4_workload_openshift_ai_model_as_a_service_api_users:
-- count: 5
-  username_prefix: api-user-
-  tier: tier-free-users
+  tierFreeUsers:
+  - count: 1
+    username_prefix: user
+  tierPremiumUsers:
+  - count: 0
+    username_prefix: manager
+  tierEnterpriseUsers:
+  - count: 1
+    username_prefix: admin
+
+
 ocp4_workload_openshift_ai_model_as_a_service_models:
 - apiVersion: serving.kserve.io/v1alpha1
   kind: LLMInferenceService
