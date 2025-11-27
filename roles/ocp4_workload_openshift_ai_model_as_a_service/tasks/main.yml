@@ -40,7 +40,7 @@
 
 - name: Save free tier user information
   include_tasks: setup_model_data.yml
-  loop: "{{ range(1, ocp4_workload_openshift_ai_model_as_a_service_api_users.tierFreeUsers.count + 1) | default(0) | list }}"
+  loop: "{{ range(1, ocp4_workload_openshift_ai_model_as_a_service_api_users.tierFreeUsers.count + 1 | default(0) | int) | list }}"
   loop_control:
     loop_var: n
   var:
