@@ -38,11 +38,13 @@
       - authorino.kuadrant.io/managed-by=authorino
   register: r_api_secrets
 
-- name: Save user information for user access
+- name: Save free tier user information
   include_tasks: setup_model_data.yml
-  loop: "{{ range(1, ocp4_workload_openshift_ai_model_as_a_service_user_count | int + 1) | list }}"
+  loop: "{{ range(1, ocp4_workload_openshift_ai_model_as_a_service_api_users.tierFreeUsers.count + 1) | default(0) | list }}"
   loop_control:
     loop_var: n
+  var:
+    _ocp4_workload_openshift_ai_model_as_a_service_api_user: "{{ ocp4_workload_openshift_ai_model_as_a_service_api_users.tierFreeUsers.username_prefix }}{{ n if ocp4_workload_openshift_ai_model_as_a_service_api_users.tierFreeUsers.count > 0 else '' }}"
 
 - name: Inference Service data
   agnosticd.core.agnosticd_user_info:
