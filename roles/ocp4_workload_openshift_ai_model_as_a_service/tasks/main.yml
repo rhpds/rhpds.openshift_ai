@@ -44,7 +44,7 @@
   loop_control:
     loop_var: n
   var:
-    _ocp4_workload_openshift_ai_model_as_a_service_api_user: "{{ ocp4_workload_openshift_ai_model_as_a_service_api_users.tierFreeUsers.usernamePrefix }}{{ n if ocp4_workload_openshift_ai_model_as_a_service_api_users.tierFreeUsers.count > 0 else '' }}"
+    _ocp4_workload_openshift_ai_model_as_a_service_api_user: "{{ ocp4_workload_openshift_ai_model_as_a_service_api_users.tierFreeUsers.usernamePrefix }}{{ n }}"
 
 - name: Inference Service data
   agnosticd.core.agnosticd_user_info:
