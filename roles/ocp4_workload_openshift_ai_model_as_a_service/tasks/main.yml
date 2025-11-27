@@ -43,7 +43,7 @@
   loop: "{{ range(1, ocp4_workload_openshift_ai_model_as_a_service_api_users.tierFreeUsers.count + 1 | default(1) | int) | list }}"
   loop_control:
     loop_var: n
-  var:
+  vars:
     _ocp4_workload_openshift_ai_model_as_a_service_api_user: "{{ ocp4_workload_openshift_ai_model_as_a_service_api_users.tierFreeUsers.usernamePrefix }}{{ n }}"
 
 - name: Inference Service data
