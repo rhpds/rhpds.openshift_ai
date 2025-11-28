@@ -22,6 +22,6 @@
   agnosticd.core.agnosticd_user_info:
     user: "{{ _ocp4_workload_openshift_ai_model_as_a_service_api_user }}"
     data:
-      apiKey: "{{ item.data.api_key | b64decode }}"
-      apiTier: "{{ item.metadata.annotations['user.authorino.kuadrant.io/groups'] }}"
+      api_key: "{{ item.data.api_key | b64decode }}"
+      api_tier: "{{ item.metadata.annotations['user.authorino.kuadrant.io/groups'] }}"
   loop: "{{ r_api_secrets.resources }}"
