@@ -5,13 +5,13 @@ ocp4_workload_openshift_ai_model_as_a_service_username_base: user
 ocp4_workload_openshift_ai_model_as_a_service_user_count: 1
 ocp4_workload_openshift_ai_model_as_a_service_api_users:
   tierFreeUsers:
-  - count: 1
+    count: 1
     usernamePrefix: user
   tierPremiumUsers:
-  - count: 0
+    count: 0
     usernamePrefix: manager
   tierEnterpriseUsers:
-  - count: 1
+    count: 1
     usernamePrefix: admin
 
 
