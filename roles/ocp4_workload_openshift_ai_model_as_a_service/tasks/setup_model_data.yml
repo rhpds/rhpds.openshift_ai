@@ -1,9 +1,13 @@
 ---
+- name: Initialize model data dictionary
+  set_fact:
+    _ocp4_workload_openshift_ai_model_as_a_service_model_data: {}
+
 - name: Build model data dictionary
   set_fact:
     _ocp4_workload_openshift_ai_model_as_a_service_model_data: >-
       {{
-        _ocp4_workload_openshift_ai_model_as_a_service_model_data | default({}) | combine({
+        _ocp4_workload_openshift_ai_model_as_a_service_model_data | combine({
           'model_name_' ~ ((idx + 1) | string): item.spec.model.name,
           'model_url_' ~ ((idx + 1) | string): 'https://maas.' ~ openshift_cluster_ingress_domain ~ '/' ~ item.metadata.namespace ~ '/' ~ item.metadata.name
         })
@@ -13,6 +17,7 @@
     index_var: idx
 
 - name: Generate model data
+  when: _ocp4_workload_openshift_ai_model_as_a_service_model_data | length > 0
   agnosticd.core.agnosticd_user_info:
     user: "{{ _ocp4_workload_openshift_ai_model_as_a_service_api_user }}"
     data: "{{ _ocp4_workload_openshift_ai_model_as_a_service_model_data }}"
