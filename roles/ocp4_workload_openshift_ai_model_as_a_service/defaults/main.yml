@@ -14,6 +14,8 @@ ocp4_workload_openshift_ai_model_as_a_service_api_users:
     count: 1
     usernamePrefix: admin
 
+ocp4_workload_openshift_ai_model_as_a_service_api_image_repository: quay.io/opendatahub/maas-api
+ocp4_workload_openshift_ai_model_as_a_service_api_image_repository_tag: odh-stable
 
 ocp4_workload_openshift_ai_model_as_a_service_models:
 - apiVersion: serving.kserve.io/v1alpha1

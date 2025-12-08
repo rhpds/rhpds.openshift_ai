@@ -35,6 +35,9 @@ spec:
 {% endfor %}
         llmInferenceServices:
         {{ ocp4_workload_openshift_ai_model_as_a_service_models | to_yaml | indent(8) }}
+        image:
+          repository: {{ ocp4_workload_openshift_ai_model_as_a_service_api_image_repository }}
+          tag: {{ ocp4_workload_openshift_ai_model_as_a_service_api_image_repository_tag }}
     repoURL: {{ ocp4_workload_openshift_ai_model_as_a_service_helm_repo }}
     targetRevision: {{ ocp4_workload_openshift_ai_model_as_a_service_helm_repo_target_revision }}
     path: ./
