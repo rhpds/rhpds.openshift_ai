@@ -31,6 +31,7 @@
   kubernetes.core.k8s:
     template: "{{ item }}"
     namespace: "{{ ocp4_workload_openshift_ai_model_deployment_namespace }}"
+    validate_certs: false
   loop:
   - llama-32-3b-instruct-secret.yaml.j2
   - llama-32-3b-instruct-serving-runtime.yaml.j2
