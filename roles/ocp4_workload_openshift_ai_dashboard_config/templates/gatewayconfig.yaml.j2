@@ -1,0 +1,9 @@
+---
+apiVersion: services.platform.opendatahub.io/v1alpha1
+kind: GatewayConfig
+metadata:
+  name: default-gateway
+spec:
+  cookie:
+    expire: {{ ocp4_workload_openshift_ai_dashboard_config_gateway_cookie_expire }}
+    refresh: {{ ocp4_workload_openshift_ai_dashboard_config_gateway_cookie_refresh }}

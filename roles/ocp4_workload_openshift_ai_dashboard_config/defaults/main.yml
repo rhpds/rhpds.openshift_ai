@@ -32,3 +32,9 @@ ocp4_workload_openshift_ai_hardware_profile_gpu_identifiers:
   minCount: 1
   resourceType: Accelerator
 
+# GatewayConfig cookie settings
+# These must be less than Keycloak session timeout to prevent redirect loops
+# Default Keycloak SSO Session Idle is 5 minutes (300 seconds)
+ocp4_workload_openshift_ai_dashboard_config_gateway_cookie_expire: 4m
+ocp4_workload_openshift_ai_dashboard_config_gateway_cookie_refresh: 1m
+

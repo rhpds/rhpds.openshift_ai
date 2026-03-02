@@ -10,3 +10,8 @@
     template: gpu-hardware-profile.yaml.j2
   loop:
   - gpu-hardware-profile.yaml.j2
+
+- name: Patch GatewayConfig cookie settings
+  kubernetes.core.k8s:
+    state: patched
+    template: gatewayconfig.yaml.j2

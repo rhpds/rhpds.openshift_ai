@@ -1,38 +1,120 @@
-Role Name
-=========
+# ocp4_workload_openshift_ai_dashboard_config
 
-A brief description of the role goes here.
+## Description
 
-Requirements
-------------
+This role configures the OpenShift AI Dashboard, including:
+- Dashboard settings and features
+- Notebook controller configuration
+- GPU hardware profiles
+- GatewayConfig cookie settings for authentication
 
-Any pre-requisites that may not be covered by Ansible itself or the role should be mentioned here. For instance, if the role uses the EC2 module, it may be a good idea to mention in this section that the boto package is required.
+## Requirements
 
-Role Variables
---------------
+- OpenShift AI operator must be installed
+- `kubernetes.core` collection
 
-A description of the settable variables for this role should go here, including any variables that are in defaults/main.yml, vars/main.yml, and any variables that can/should be set via parameters to the role. Any variables that are read from other roles and/or the global scope (ie. hostvars, group vars, etc.) should be mentioned here as well.
+## Role Variables
 
-Dependencies
-------------
+### Dashboard Settings
 
-A list of other roles hosted on Galaxy should go here, plus any details in regards to parameters that may need to be set for other roles, or variables that are used from other roles.
+```yaml
+ocp4_workload_openshift_ai_dashboard_config_settings:
+  disableTracking: false
+  disableModelRegistry: false
+  disableModelCatalog: false
+  disableKServeMetrics: false
+  genAiStudio: true
+  modelAsService: true
+  disableLMEval: false
+```
 
-Example Playbook
-----------------
+### Notebook Controller
 
-Including an example of how to use your role (for instance, with variables passed in as parameters) is always nice for users too:
+```yaml
+ocp4_workload_openshift_ai_dashboard_config_notebook_controller:
+  enabled: true
+  pvcSize: 20Gi
+```
 
-    - hosts: servers
-      roles:
-         - { role: username.rolename, x: 42 }
+### Hardware Profiles
 
-License
--------
+```yaml
+ocp4_workload_openshift_ai_hardware_profile_gpu_identifiers:
+- defaultCount: '1'
+  displayName: CPU
+  identifier: cpu
+  maxCount: '8'
+  minCount: 1
+  resourceType: CPU
+- defaultCount: 12Gi
+  displayName: Memory
+  identifier: memory
+  maxCount: 16Gi
+  minCount: 1Gi
+  resourceType: Memory
+- defaultCount: 1
+  displayName: GPU
+  identifier: nvidia.com/gpu
+  maxCount: 4
+  minCount: 1
+  resourceType: Accelerator
+```
 
-BSD
+### GatewayConfig Cookie Settings
 
-Author Information
-------------------
+**IMPORTANT**: These settings prevent authentication redirect loops when using Keycloak.
 
-An optional section for the role authors to include contact information, or a website (HTML is not allowed).
+```yaml
+# Cookie expiry time - MUST be less than Keycloak SSO Session Idle timeout
+# Default Keycloak session idle is 5 minutes (300 seconds)
+ocp4_workload_openshift_ai_dashboard_config_gateway_cookie_expire: 4m
+
+# Cookie refresh interval - how often to refresh the cookie during user activity
+# Should be 1/4 to 1/3 of the expire time
+ocp4_workload_openshift_ai_dashboard_config_gateway_cookie_refresh: 1m
+```
+
+#### Cookie Timing Explanation
+
+The GatewayConfig cookie settings must be coordinated with Keycloak session timeouts to prevent redirect loops:
+
+| Setting | Recommended Value | Reason |
+|---------|------------------|--------|
+| Cookie Expire | `4m` (240 seconds) | Must be < Keycloak SSO Session Idle (5 min) |
+| Cookie Refresh | `1m` (60 seconds) | Keeps active users logged in by refreshing cookie |
+
+**How it works**:
+- If cookie expires **after** Keycloak session → redirect loop
+- If cookie expires **before** Keycloak session → clean re-authentication
+- Cookie refresh ensures active users stay logged in
+
+**Formula**: `Cookie Refresh < Cookie Expire < Keycloak Session Idle`
+
+Example: `60s < 240s < 300s` ✅
+
+## Dependencies
+
+- OpenShift AI operator must be installed and running
+
+## Example Playbook
+
+```yaml
+- name: Configure OpenShift AI Dashboard
+  hosts: localhost
+  roles:
+    - role: rhpds.openshift_ai.ocp4_workload_openshift_ai_dashboard_config
+      vars:
+        ocp4_workload_openshift_ai_dashboard_config_gateway_cookie_expire: 4m
+        ocp4_workload_openshift_ai_dashboard_config_gateway_cookie_refresh: 1m
+        ocp4_workload_openshift_ai_dashboard_config_settings:
+          genAiStudio: true
+          modelAsService: true
+```
+
+## License
+
+Apache 2.0
+
+## Author Information
+
+Red Hat GPTE
